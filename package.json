@@ -2,15 +2,25 @@
   "name": "agents-playground",
   "version": "0.1.0",
   "private": true,
+  "main": "electron-src/electron.js",
+  "description": "Agents Playground - A LiveKit-powered interactive environment",
+"author": "Your Name or Organization",
+
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0 ",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -H 0.0.0.0",
+    "lint": "next lint",
+    "electron": "electron .",
+  "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\" \"livekit-server --dev --bind 0.0.0.0\" \"python ../local_server.py dev\"",
+  "electron-build": "next build && electron-builder",
+  "electron-start": "next build && concurrently \"next start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "dependencies": {
     "@livekit/components-react": "^2.3.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@tauri-apps/api": "^1.6.0",
+    "@tauri-apps/cli": "^1.6.1",
     "cookies-next": "^4.1.1",
     "framer-motion": "^10.16.16",
     "js-yaml": "^4.1.0",
@@ -29,10 +39,35 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wait-on": "^7.2.0",
+    "electron": "^32.0.1",
+    "electron-builder": "^25.0.5"
+  },
+  "build": {
+    "appId": "com.yourcompany.agentsplayground",
+    "productName": "Agents Playground",
+    "files": [
+      ".next/**/*",
+      "electron-src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
